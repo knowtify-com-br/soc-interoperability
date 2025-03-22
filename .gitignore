@@ -1,0 +1,5 @@
+
+monitored/.DS_Store
+.DS_Store
+/monitored/application/sagui/node_modules
+monitored/application/sagui/package-lock.json

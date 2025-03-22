@@ -1,0 +1,43 @@
+networks:
+  dmz:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.10.0/24
+  intranet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.20.0/24
+
+services:
+  shield:
+    build: ./shield
+    privileged: true
+    networks:
+      dmz:
+        ipv4_address: 10.0.10.10
+      intranet:
+        ipv4_address: 10.0.20.10
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+
+  lb:
+    build: ./lb
+    networks:
+      intranet:
+        ipv4_address: 10.0.20.20
+    depends_on:
+      - shield
+
+  application:
+    build: ./application
+    networks:
+      intranet:
+        ipv4_address: 10.0.20.30
+    depends_on:
+      - lb
+
